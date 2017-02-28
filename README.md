@@ -26,7 +26,7 @@ Installation
 
 Phrender can be installed using composer
 
-`composer require phrender/phrender`
+`composer require dlundgren/phrender`
 
 Basic Usage
 -----------
