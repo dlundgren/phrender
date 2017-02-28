@@ -1,0 +1,20 @@
+language: php
+php:
+  - "5.6"
+  - "7.0"
+  - "7.1"
+  - hhvm
+
+addons:
+  code_climate:
+    repo_token:
+      secure: "QW8zzGXaZHqHJJU7m6Sp0by2hLX8xQS8elVWj2LDlclGgsrl4z21LiCOccaAwZU/s2qtONKNmxqUw0S189XqWKRMB+szn7ynWN+zBX5EZf1PVKm583PWU9cUgSBM966OjVD8uwV6CrHUl6hZi7N9xnINLbw/JcnVIP4tIQzWmu/aQC8PbKs2GuPKVVjijWxa87IwzsorXH7u9VyRKUs0d1v+ATGwrku8F8op3wrKoDJyDhIewY9McwCgxy8vZWFN7EAYGNNgSAqwLz6MB35hqGdM191csQfYI0McbV5Fp3T+VI5+vhnrGXW6k1Vbz6jMc+j0SQ5UVnYWJ8BibZ+ZAAFS7SLYwnruMk/3ln8eCLR+Eqp9OYE90S1rvrX0PYBXAog6/LXBwhLjjKqapJksCMsv/NT0dW3pqiqCD4mvyY5RNLFGky03lBeu3Sam08eiljh4O8x9lcYfBwKn6uY/MuOU9JF//zw9R5g1ccRJWzjjCJHJKXmHdeo/+C6ZG7mir11BBaJqmgD02UyKgIFGQRIaOLml3UiY31opkEWZrYWfqx5Z8Kze9Pgee/D3J3111WWF5i38nFVJ3Xxjv5HCelJx0lqJAp+9Fk/E6gZ94wX6WqfClYi6UyFg8d44LVLo5UMh8dhWQCwL/b51R1aIelrP6CfZa+bvucwiES54Jbc="
+
+before_script:
+  - composer self-update
+  - composer install --dev --prefer-source
+
+script: phpunit --coverage-clover build/logs/clover.xml
+
+after_script:
+  - vendor/bin/test-reporter
