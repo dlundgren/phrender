@@ -1,0 +1,1 @@
+<?= $this->test ?><?= $this->partial('not-a-render') ?>

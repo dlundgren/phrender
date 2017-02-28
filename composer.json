@@ -1,0 +1,24 @@
+{
+    "name": "dlundgren/phrender",
+    "description": "Simple PHP Renderer",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Lundgren",
+            "email": "dlundgren@syberisle.net"
+        }
+    ],
+    "autoload" : {
+        "psr-4" : {
+            "Phrender\\": "src"
+        }
+    },
+    "require": {
+        "output-interop/output-interop": "0.1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0",
+        "codeclimate/php-test-reporter": "^0.4.4"
+    }
+}
