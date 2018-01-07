@@ -24,4 +24,10 @@ class FactoryTest
 		$f = new Factory([TEST_FILES_PATH . '/layouts', TEST_FILES_PATH . '/views']);
 		self::assertEquals(TEST_FILES_PATH .'/views/index.php', $f->load('index')->file());
 	}
+
+	public function testLoadReturnsAlternateFileExtension()
+	{
+		$f = new Factory([TEST_FILES_PATH . '/layouts', TEST_FILES_PATH . '/views'], 'phtml');
+		self::assertEquals(TEST_FILES_PATH .'/views/index.phtml', $f->load('index')->file());
+	}
 }

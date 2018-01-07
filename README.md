@@ -1,5 +1,4 @@
-Phrender
-========
+# Phrender
 
 [![Travis CI](https://secure.travis-ci.org/dlundgren/phrender.png)](https://travis-ci.org/dlundgren/phrender) [![Code Climate](https://codeclimate.com/github/dlundgren/phrender/badges/gpa.svg)](https://codeclimate.com/github/dlundgren/phrender)
 
@@ -10,8 +9,7 @@ PSR-1 and PSR-4 compliant.
 
 This uses the [Output Interop](https://github.com/output-interop/output-interop) specification.
 
-Contexts
---------
+## Contexts
 
 The following contexts are provided for use:
 
@@ -21,15 +19,13 @@ The following contexts are provided for use:
 * **Match** Uses a regex to match the template
 * **Only** Will match only the specified template  
 
-Installation
-------------
+## Installation
 
 Phrender can be installed using composer
 
 `composer require dlundgren/phrender`
 
-Basic Usage
------------
+## Basic Usage
 
 ```php
 <?php
@@ -46,5 +42,19 @@ $output = $engine->render('index', ['var' => 'something']);
 // output = ""
 $ctxt   = new Phrender\Context\Contains('something', ['var' => 'display']);
 $output = $engine->render('index', $ctxt); 
+```
+
+## Different extension
+
+You may use an alternate extension for the templates with the Template Factory constructor second argument.
+
+```php
+$factory = new Phrender\Template\Factory(['/path/to/views'], 'phtml');
+$engine = new Phrender\Engine($factory, new Phrender\Context\Collection());
+
+// index.phtml: <?= $this->var ?>
+
+// output = "something"
+$output = $engine->render('index', ['var' => 'something']);
 ```
 

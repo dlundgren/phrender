@@ -18,6 +18,8 @@ use Phrender\Exception\TemplateNotFound;
 class Factory
 	implements TemplateFactory
 {
+	const DEFAULT_EXT = 'php';
+
 	/**
 	 * List of paths to search for the templates
 	 *
@@ -25,9 +27,17 @@ class Factory
 	 */
 	private $paths = [];
 
-	public function __construct($paths = [])
+	/**
+	 * The file extension to use for the files
+	 *
+	 * @var string
+	 */
+	private $ext = self::DEFAULT_EXT;
+
+	public function __construct($paths = [], $ext = self::DEFAULT_EXT)
 	{
 		$this->paths = $paths;
+		$this->ext   = $ext;
 	}
 
 	/**
@@ -36,7 +46,7 @@ class Factory
 	public function load($template)
 	{
 		foreach ($this->paths as $path) {
-			if (file_exists($file = "{$path}/{$template}.php")) {
+			if (file_exists($file = "{$path}/{$template}.{$this->ext}")) {
 				return new Template($file, $this);
 			}
 		}
