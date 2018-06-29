@@ -25,14 +25,14 @@ class Factory
 	 *
 	 * @var array
 	 */
-	private $paths = [];
+	protected $paths = [];
 
 	/**
 	 * The file extension to use for the files
 	 *
 	 * @var string
 	 */
-	private $ext = self::DEFAULT_EXT;
+	protected $ext = self::DEFAULT_EXT;
 
 	public function __construct($paths = [], $ext = self::DEFAULT_EXT)
 	{
@@ -47,11 +47,20 @@ class Factory
 	{
 		foreach ($this->paths as $path) {
 			if (file_exists($file = "{$path}/{$template}.{$this->ext}")) {
-				return new Template($file, $this);
+				return $this->newTemplate($file);
 			}
 		}
 
 		throw new TemplateNotFound($template);
+	}
+
+	/**
+	 * @param $file
+	 * @return Template The new template
+	 */
+	protected function newTemplate($file)
+	{
+		return new Template($file, $this);
 	}
 
 }

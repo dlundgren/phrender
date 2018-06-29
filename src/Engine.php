@@ -7,6 +7,7 @@
 namespace Phrender;
 
 use Interop\Output\Context as InteropContext;
+use Interop\Output\Template;
 use Interop\Output\TemplateFactory;
 
 /**
@@ -20,12 +21,12 @@ class Engine
 	/**
 	 * @var InteropContext
 	 */
-	private $context;
+	protected $context;
 
 	/**
 	 * @var TemplateFactory
 	 */
-	private $factory;
+	protected $factory;
 
 	public function __construct(TemplateFactory $factory = null,InteropContext $context = null)
 	{
@@ -75,11 +76,20 @@ class Engine
 		}
 		$this->context->add($data);
 
-		$output = $this->factory->load($template)->render($this->context);
+		$output = $this->loadTemplate($template)->render($this->context);
 
 		$this->context->remove($data);
 
 		return $output;
+	}
+
+	/**
+	 * @param $template
+	 * @return Template Returns the template from the factory
+	 */
+	protected function loadTemplate($template)
+	{
+		return $this->factory->load($template);
 	}
 
 }
