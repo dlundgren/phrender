@@ -47,7 +47,7 @@ class Factory
 	{
 		foreach ($this->paths as $path) {
 			if (file_exists($file = "{$path}/{$template}.{$this->ext}")) {
-				return $this->newTemplate($file);
+				return $this->create($file);
 			}
 		}
 
@@ -58,9 +58,8 @@ class Factory
 	 * @param $file
 	 * @return Template The new template
 	 */
-	protected function newTemplate($file)
+	public function create($file)
 	{
 		return new Template($file, $this);
 	}
-
 }
