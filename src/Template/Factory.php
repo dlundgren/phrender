@@ -7,7 +7,7 @@
 
 namespace Phrender\Template;
 
-use Interop\Output\TemplateFactory;
+use Interop\Output\Template as InteropTemplate;
 use Phrender\Exception\TemplateNotFound;
 
 /**
@@ -16,34 +16,19 @@ use Phrender\Exception\TemplateNotFound;
  * @package Phrender\Template
  */
 class Factory
-	implements TemplateFactory
 {
 	const DEFAULT_EXT = 'php';
 
 	/**
-	 * List of paths to search for the templates
-	 *
-	 * @var array
+	 * @param string[] $paths
 	 */
-	protected $paths = [];
-
-	/**
-	 * The file extension to use for the files
-	 *
-	 * @var string
-	 */
-	protected $ext = self::DEFAULT_EXT;
-
-	public function __construct($paths = [], $ext = self::DEFAULT_EXT)
-	{
-		$this->paths = $paths;
-		$this->ext   = $ext;
+	public function __construct(
+		protected array  $paths = [],
+		protected string $ext = self::DEFAULT_EXT
+	) {
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function load($template)
+	public function load(string $template): InteropTemplate
 	{
 		foreach ($this->paths as $path) {
 			if (file_exists($file = "{$path}/{$template}.{$this->ext}")) {
@@ -54,11 +39,7 @@ class Factory
 		throw new TemplateNotFound($template);
 	}
 
-	/**
-	 * @param $file
-	 * @return Template The new template
-	 */
-	public function create($file)
+	public function create(string $file): InteropTemplate
 	{
 		return new Template($file, $this);
 	}

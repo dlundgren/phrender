@@ -18,74 +18,71 @@ class Collection
 	implements Context
 {
 	/**
-	 * @var \SplObjectStorage
+	 * @var Context[]
 	 */
-	private $storage;
+	protected array $contexts = [];
 
-	/**
-	 * Collection constructor.
-	 */
-	public function __construct()
+	public function __construct(Context ...$contexts)
 	{
-		$this->storage = [];
+		foreach ($contexts as $context) {
+			$this->add($context);
+		}
 	}
 
 	/**
 	 * Add a context to the collection
-	 *
-	 * @param Context $context
 	 */
-	public function add(Context $context)
+	public function add(Context $context): void
 	{
-		$this->storage[spl_object_hash($context)] = $context;
+		$this->contexts[spl_object_hash($context)] = $context;
 	}
 
 	/**
 	 * Remove a context from the collection
-	 *
-	 * @param Context $context
 	 */
-	public function remove(Context $context)
+	public function remove(Context $context): void
 	{
-		if (isset($this->storage[$hash = spl_object_hash($context)])) {
-			unset($this->storage[$hash]);
+		if (isset($this->contexts[$hash = spl_object_hash($context)])) {
+			unset($this->contexts[$hash]);
 		}
 	}
 
 	/**
 	 * Determine if the collection has the context
-	 * @param Context $context
-	 * @return bool
 	 */
-	public function has(Context $context)
+	public function has(Context $context): bool
 	{
-		return isset($this->storage[spl_object_hash($context)]);
+		return isset($this->contexts[spl_object_hash($context)]);
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function accepts($template)
+	public function accepts(string $name): bool
 	{
 		$accepts = false;
-		foreach($this->storage as $context) {
-			$accepts |= $context->accepts($template);
+		foreach ($this->contexts as $context) {
+			$accepts |= $context->accepts($name);
 		}
 
-		return $accepts ? true : false;
+		return (bool)$accepts;
 	}
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return mixed[]
 	 */
-	public function provide($template)
+	public function provide(string $name): array
 	{
-		if (empty($template)) {
+		if (empty($name)) {
 			return [];
 		}
 
-		return array_reduce($this->storage, function ($carry, $context) use ($template) {
-			return array_merge($carry ?: [], $context->provide($template));
-		});
+		return array_reduce(
+			$this->contexts,
+			fn($carry, $context): array => array_merge($carry, $context->provide($name)),
+			[]
+		);
 	}
 }

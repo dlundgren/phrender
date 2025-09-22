@@ -1,49 +1,39 @@
 <?php
 
+/**
+ * @file
+ * Contains \Phrender\Context\SearchesForNeedleInHaystack
+ */
+
 namespace Phrender\Context;
 
 trait SearchesForNeedleInHaystack
 {
 	/**
-	 * @var string
-	 */
-	private $needle;
-
-	/**
-	 * @var array
-	 */
-	private $data;
-
-	/**
 	 * Generic constructor for needle
 	 *
-	 * @param string $needle
-	 * @param array  $data
+	 * @param mixed[] $data
 	 */
-	public function __construct($needle, array $data = [])
+	public function __construct(protected string $needle, protected array $data = [])
 	{
-		$this->needle = $needle;
-		$this->data   = $data;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function accepts($template)
+	public function accepts(string $name): bool
 	{
-		if (is_string($template)) {
-			return $this->match($template);
-		}
-
-		throw new \InvalidArgumentException("Template passed in must be a string");
+		return $this->match($name);
 	}
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return mixed[]
 	 */
-	public function provide($template)
+	public function provide(string $name): array
 	{
-		return $this->match($template)
+		return $this->match($name)
 			? $this->data
 			: [];
 	}

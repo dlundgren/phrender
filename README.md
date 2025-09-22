@@ -16,7 +16,7 @@ The following contexts are provided for use:
 * **Collection** Any number of the following
 * **Any** Matches any template
 * **Contains** uses `stripos` to match the template
-* **Match** Uses a regex to match the template
+* **Matches** Uses a regex to match the template
 * **Only** Will match only the specified template  
 
 ## Installation

@@ -1,28 +1,34 @@
 {
-    "name": "dlundgren/phrender",
-    "description": "Simple PHP Renderer",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "David Lundgren",
-            "email": "dlundgren@syberisle.net"
-        }
-    ],
-    "autoload" : {
-        "psr-4" : {
-            "Phrender\\": "src"
-        }
-    },
-    "require": {
-        "output-interop/output-interop": "0.1.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5.7",
-        "codeclimate/php-test-reporter": "^0.4.4"
-    },
-    "scripts" : {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-clover build/logs/clover.xml"
+  "name": "dlundgren/phrender",
+  "description": "Simple PHP Renderer",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "David Lundgren",
+      "email": "dlundgren@syberisle.net"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Phrender\\": "src"
+    }
+  },
+  "require": {
+    "php": ">=8.1",
+    "output-interop/output-interop": "^0.2.0"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^2.1.22",
+    "phpunit/phpunit": ">=10",
+    "squizlabs/php_codesniffer": "^3.4.2",
+    "syberisle/coding-standards": "^2.0"
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-clover": "@php vendor/bin/phpunit --coverage-clover=build/coverage/clover.xml",
+    "test-coverage": "@php vendor/bin/phpunit --coverage-html=build/coverage/html",
+    "sniff": "@php vendor/bin/phpcs",
+    "stan": "@php -d memory_limit=-1 vendor/bin/phpstan analyse  --level=10 src"
+  }
 }

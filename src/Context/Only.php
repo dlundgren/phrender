@@ -4,6 +4,7 @@
  * @file
  * Contains \Phrender\Context\Only
  */
+
 namespace Phrender\Context;
 
 use Interop\Output\Context;
@@ -17,45 +18,29 @@ class Only
 	implements Context
 {
 	/**
-	 * List of data for this context
-	 *
-	 * @var array
+	 * @param mixed[] $data
 	 */
-	private $data;
-
-	/**
-	 * @var string
-	 */
-	private $match;
-
-	/**
-	 * @param array $data
-	 */
-	public function __construct($name, array $data = [])
+	public function __construct(protected string $name, protected array $data = [])
 	{
-		$this->match = $name;
-		$this->data = $data;
-	}
-
-	/**
-	 * Always returns true
-	 *
-	 * {@inheritdoc}
-	 */
-	public function accepts($template)
-	{
-		return $this->match === $template;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function provide($template)
+	public function accepts(string $name): bool
 	{
-		if ($this->accepts($template)) {
-			return $this->data;
-		}
+		return $this->name === $name;
+	}
 
-		return [];
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return mixed[]
+	 */
+	public function provide(string $name): array
+	{
+		return $this->accepts($name)
+			? $this->data
+			: [];
 	}
 }

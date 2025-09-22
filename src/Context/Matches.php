@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Phrender\Context\Contains
+ * Contains \Phrender\Context\Matches
  */
 
 namespace Phrender\Context;
@@ -10,17 +10,17 @@ namespace Phrender\Context;
 use Interop\Output\Context;
 
 /**
- * Provides a generic matcher for template data
+ * Provides a regex pattern matcher for template data
  *
  * @package Phrender\Context
  */
-class Contains
+class Matches
 	implements Context
 {
 	use SearchesForNeedleInHaystack;
 
 	protected function match(string $haystack): bool
 	{
-		return str_contains($haystack, $this->needle);
+		return preg_match($this->needle, $haystack) === 1;
 	}
 }

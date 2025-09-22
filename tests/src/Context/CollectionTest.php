@@ -76,4 +76,16 @@ class CollectionTest
 		self::assertFalse($c->has($any1));
 		self::assertTrue($c->has($any2));
 	}
+
+	public function testConstructorNoArguments()
+	{
+		$c = new Collection();
+		self::assertFalse($c->has(new Any()));
+	}
+
+	public function testConstructorVariadic()
+	{
+		$c = new Collection($a1 = new Any());
+		self::assertTrue($c->has($a1));
+	}
 }

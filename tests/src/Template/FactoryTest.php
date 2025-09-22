@@ -16,18 +16,18 @@ class FactoryTest
 	public function testLoadReturnsLayoutsDefault()
 	{
 		$f = new Factory([TEST_FILES_PATH . '/layouts', TEST_FILES_PATH . '/views']);
-		self::assertEquals(TEST_FILES_PATH .'/layouts/default.php', $f->load('default')->file());
+		self::assertEquals(TEST_FILES_PATH .'/layouts/default.php', $f->load('default')->name());
 	}
 
 	public function testLoadReturnsViewsIndex()
 	{
 		$f = new Factory([TEST_FILES_PATH . '/layouts', TEST_FILES_PATH . '/views']);
-		self::assertEquals(TEST_FILES_PATH .'/views/index.php', $f->load('index')->file());
+		self::assertEquals(TEST_FILES_PATH .'/views/index.php', $f->load('index')->name());
 	}
 
 	public function testLoadReturnsAlternateFileExtension()
 	{
 		$f = new Factory([TEST_FILES_PATH . '/layouts', TEST_FILES_PATH . '/views'], 'phtml');
-		self::assertEquals(TEST_FILES_PATH .'/views/index.phtml', $f->load('index')->file());
+		self::assertEquals(TEST_FILES_PATH .'/views/index.phtml', $f->load('index')->name());
 	}
 }

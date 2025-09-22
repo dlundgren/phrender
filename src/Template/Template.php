@@ -7,10 +7,9 @@
 
 namespace Phrender\Template;
 
-use Interop\Output\Context as InteropContext;
-use Interop\Output\TemplateFactory;
-use Phrender\Context;
+use Interop\Output\Context;
 use Interop\Output\Exception\TemplateNotFound;
+use Phrender\Context\Any;
 
 /**
  * Template for rendering PHP
@@ -20,30 +19,21 @@ use Interop\Output\Exception\TemplateNotFound;
 class Template
 	implements \Interop\Output\Template
 {
-	/**
-	 * The Factory for partials
-	 *
-	 * @var Factory
-	 */
-	private $factory;
+	protected ?Context $context = null;
 
 	/**
-	 * The file to render
-	 *
-	 * @var string
+	 * @var mixed[]
 	 */
-	private $file;
+	protected array $data = [];
 
-	public function __construct($file, TemplateFactory $factory)
+	public function __construct(protected string $file, protected Factory $factory)
 	{
-		$this->factory = $factory;
-		$this->file    = $file;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function file()
+	public function name(): string
 	{
 		return $this->file;
 	}
@@ -51,43 +41,43 @@ class Template
 	/**
 	 * {@inheritdoc}
 	 */
-	public function render(InteropContext $context)
+	public function render(Context $context): string
 	{
+		$this->context = $context;
 		$this->data    = $context->provide($this->file);
 
 		ob_start();
 
 		require $this->file;
 
-		return ob_get_clean();
+		$this->context = null;
+
+		return  ob_get_clean() ?: '';
 	}
 
 	/**
 	 * Returns the value from the given name or null
 	 *
 	 * @param string $name
+	 *
 	 * @return mixed|null
 	 */
 	public function __get($name)
 	{
-		return isset($this->data[$name]) ? $this->data[$name] : null;
+		return $this->data[$name] ?? null;
 	}
 
 	/**
 	 * Render a partial template with the given data using the instantiated factory
 	 *
-	 * @TODO should probably be using the engine instead?
-	 *
-	 * @param string     $template
-	 * @param array|null $data
-	 * @return bool|string
+	 * @param mixed[] $data
 	 */
-	public function partial($template, $data = [])
+	public function partial(string $template, ?array $data = []): string
 	{
 		try {
-			return $this->factory->load($template)->render(new Context\Any(array_merge($this->data, $data)));
+			return $this->factory->load($template)->render(new Any(array_merge($this->data, $data ?? [])));
 		}
-		catch (TemplateNotFound $e) {
+		catch (TemplateNotFound) {
 			return '';
 		}
 	}

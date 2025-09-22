@@ -4,6 +4,7 @@
  * @file
  * Contains \Phrender\Context\Any
  */
+
 namespace Phrender\Context;
 
 use Interop\Output\Context;
@@ -17,18 +18,10 @@ class Any
 	implements Context
 {
 	/**
-	 * List of data for this context
-	 *
-	 * @var array
+	 * @param mixed[] $data
 	 */
-	private $data;
-
-	/**
-	 * @param array $data
-	 */
-	public function __construct(array $data = [])
+	public function __construct(protected array $data = [])
 	{
-		$this->data = $data;
 	}
 
 	/**
@@ -36,15 +29,17 @@ class Any
 	 *
 	 * {@inheritdoc}
 	 */
-	public function accepts($template)
+	public function accepts(string $name): bool
 	{
 		return true;
 	}
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return mixed[]
 	 */
-	public function provide($template)
+	public function provide(string $name): array
 	{
 		return $this->data;
 	}

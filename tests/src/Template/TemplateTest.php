@@ -1,7 +1,6 @@
 <?php
 namespace Phrender\Template;
 
-use Interop\Output\Exception\TemplateNotFound;
 use PHPUnit\Framework\TestCase;
 use Phrender\Context\Any;
 

@@ -4,11 +4,14 @@
  * @file
  * Contains Phrender\Engine
  */
+
 namespace Phrender;
 
-use Interop\Output\Context as InteropContext;
-use Interop\Output\Template;
-use Interop\Output\TemplateFactory;
+use Interop\Output\Context;
+use Interop\Output\Template as InteropTemplate;
+use Phrender\Context\Any;
+use Phrender\Context\Collection;
+use Phrender\Template\Factory;
 
 /**
  * The Template rendering engine
@@ -18,42 +21,40 @@ use Interop\Output\TemplateFactory;
 class Engine
 	implements \Interop\Output\Engine
 {
-	/**
-	 * @var InteropContext
-	 */
-	protected $context;
+	protected Collection $context;
 
-	/**
-	 * @var TemplateFactory
-	 */
-	protected $factory;
+	protected Factory $factory;
 
-	public function __construct(TemplateFactory $factory = null,InteropContext $context = null)
-	{
-		$this->context = $context ?: new Context\Collection();
-		$this->factory = $factory ?: new Template\Factory();
+	public function __construct(
+		?Factory $factory = null,
+		?Context $context = null
+	) {
+		$this->useContext($context ?? new Collection());
+		$this->factory = $factory ?? new Factory();
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Returns the currently used global context
 	 */
-	public function context()
+	public function context(): Collection
 	{
 		return $this->context;
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Set the global context
 	 */
-	public function useContext(InteropContext $context)
+	public function useContext(Context $context): self
 	{
-		$this->context = $context;
+		$this->context = ($context instanceof Collection) ? $context : new Collection($context);
+
+		return $this;
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Returns the Template factory in use
 	 */
-	public function templateFactory()
+	public function factory(): Factory
 	{
 		return $this->factory;
 	}
@@ -61,19 +62,22 @@ class Engine
 	/**
 	 * {@inheritdoc}
 	 */
-	public function useTemplateFactory(TemplateFactory $templateFactory)
+	public function useFactory(Factory $factory): self
 	{
-		$this->factory = $templateFactory;
+		$this->factory = $factory;
+
+		return $this;
 	}
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param Context|mixed[]|null $data
 	 */
-	public function render($template, $data)
+	public function render(string $template, Context|array|null $data = null): string
 	{
-		if (!($data instanceof InteropContext)) {
-			$data = new Context\Any($data);
-		}
+		$data = $data instanceof Context ? $data : new Any($data ?? []);
+
 		$this->context->add($data);
 
 		$output = $this->loadTemplate($template)->render($this->context);
@@ -83,13 +87,8 @@ class Engine
 		return $output;
 	}
 
-	/**
-	 * @param $template
-	 * @return Template Returns the template from the factory
-	 */
-	protected function loadTemplate($template)
+	protected function loadTemplate(string $template): InteropTemplate
 	{
 		return $this->factory->load($template);
 	}
-
 }

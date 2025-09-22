@@ -16,9 +16,8 @@ class TemplateNotFound
 	extends \Exception
 	implements \Interop\Output\Exception\TemplateNotFound
 {
-	public function __construct($template)
+	public function __construct(string $template)
 	{
-		$this->message = "Template not found: $template";
+		$this->message = "Template not found: {$template}";
 	}
-
 }
